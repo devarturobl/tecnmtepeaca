@@ -1,3 +1,5 @@
+import 'package:dia1/widgets/area1.dart';
+import 'package:dia1/widgets/area2.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -28,82 +30,8 @@ class MyApp extends StatelessWidget {
             fit: BoxFit.cover,
           ),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Tepeaca Puebla",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
-                Text(
-                  "Se localiza en la Sierra de San Jerónimo",
-                  style: TextStyle(color: Colors.blueGrey),
-                )
-              ],
-            ),
-            Row(
-              children: [
-                Icon(
-                  Icons.star,
-                  color: Colors.red,
-                ),
-                Text("41")
-              ],
-            )
-          ],
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 40.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Column(
-                children: [
-                  Icon(
-                    Icons.call,
-                    color: Colors.deepPurpleAccent,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10.0),
-                    child: Text("Llamanos",
-                        style: TextStyle(color: Colors.deepPurpleAccent)),
-                  )
-                ],
-              ),
-              Column(
-                children: [
-                  Icon(
-                    Icons.route,
-                    color: Colors.deepPurpleAccent,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10.0),
-                    child: Text("Ruta",
-                        style: TextStyle(color: Colors.deepPurpleAccent)),
-                  )
-                ],
-              ),
-              Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 10.0),
-                    child: Icon(
-                      Icons.share,
-                      color: Colors.deepPurpleAccent,
-                    ),
-                  ),
-                  Text(
-                    "Compartir",
-                    style: TextStyle(color: Colors.deepPurpleAccent),
-                  )
-                ],
-              ),
-            ],
-          ),
-        ),
+        Area1(),
+        Area2(),
         Padding(
             padding: const EdgeInsets.only(left: 30.0, right: 30.0, top: 40.0),
             child: Text(
