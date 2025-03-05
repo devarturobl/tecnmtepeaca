@@ -1,0 +1,10 @@
+Lista de Software:
+1.- Android Studio
+1.1 Configuración:instalar el plug de flutter y dart.
+1.2 Actualizar nuestras librerías en el SDK manager - SDK Platforms Recomiendo las ultimas 3 versiones, SDK Tools Todas, SDK Update Todas.
+2.- Node Js
+3.- SDK flutter
+4.- Plug Flutter y Dart para VsCode y Android Studio
+5.- Crear una variable de entorno
+6.- Git
+ 
