@@ -10,10 +10,15 @@ class Calls extends StatelessWidget {
         title: const Text('Calls'),
         centerTitle: true,
       ),
-      body: const Center(
-        child: Text(
-          'Calls',
-          style: TextStyle(fontSize: 50),
+      body: Center(
+        child: Column(
+          children: [
+            Image.network("https://thispersondoesnotexist.com/"),
+            Text(
+              'Calls',
+              style: TextStyle(fontSize: 50),
+            ),
+          ],
         ),
       ),
     );
