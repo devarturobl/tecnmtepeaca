@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "511757942526",
+    "project_id": "notastt-d4acd",
+    "storage_bucket": "notastt-d4acd.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:511757942526:android:b2e8456a651a7995d26faf",
+        "android_client_info": {
+          "package_name": "com.example.misnotas"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKRc6-M-V3TAKgQQOyEHqG1fi9xPtv1dY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
