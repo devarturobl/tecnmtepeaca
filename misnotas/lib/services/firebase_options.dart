@@ -6,15 +6,16 @@ class FirestoreService {
       FirebaseFirestore.instance.collection('mynotes');
 
   //Crear un registro
-  Future<void> addNote(String note) {
+  Future<void> addNote(String note, String details) {
     return notes
-        .add({'title': note, 'details': '', 'timestamp': Timestamp.now()});
+        .add({'title': note, 'details': details, 'timestamp': Timestamp.now()});
   }
 
   //Extraer o leer los datos de mi coleccion
   Stream<QuerySnapshot> getNotesStream() {
     final notesStream =
         notes.orderBy('timestamp', descending: true).snapshots();
+    //notes.snapshots();
     return notesStream;
   }
 
@@ -31,5 +32,9 @@ class FirestoreService {
       'details': details,
       'timestamp': Timestamp.now(),
     });
+  }
+
+  Future<void> deleteNote(String docID) {
+    return notes.doc(docID).delete();
   }
 }

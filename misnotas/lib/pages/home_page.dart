@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:misnotas/pages/add_notes.dart';
 import 'package:misnotas/pages/mydetails.dart';
 import 'package:misnotas/services/firebase_options.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -48,11 +50,11 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () {
                     if (docID != null) {
                       firestoreService.updateNotes(docID, textController.text);
+                      Navigator.pop(context);
                     } else {
-                      firestoreService.addNote(textController.text);
+                      //firestoreService.addNote(textController.text, textController.text);
                     }
                     textController.clear();
-                    Navigator.pop(context);
                   },
                   label: Text("Guardar"),
                   icon: Icon(Icons.save),
@@ -61,7 +63,7 @@ class _HomePageState extends State<HomePage> {
             ));
   }
 
-  void deleteNote() {
+  void deleteNote(String docID) {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -69,6 +71,7 @@ class _HomePageState extends State<HomePage> {
               actions: [
                 ElevatedButton(
                     onPressed: () {
+                      firestoreService.deleteNote(docID);
                       Navigator.pop(context);
                     },
                     child: Text("Si")),
@@ -103,69 +106,76 @@ class _HomePageState extends State<HomePage> {
             if (snapshot.hasData) {
               List<DocumentSnapshot> noteList = snapshot.data!.docs;
               return Padding(
-                padding: const EdgeInsets.only(left: 15.0, right: 15.0),
-                child: GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 15,
-                        mainAxisSpacing: 15,
-                        childAspectRatio: 1.5),
-                    itemCount: noteList.length,
-                    itemBuilder: (context, index) {
-                      DocumentSnapshot document = noteList[index];
-                      return GestureDetector(
-                        onLongPress: () {
-                          deleteNote();
-                        },
-                        child: GestureDetector(
-                          onDoubleTap: () {
-                            openNote(document.id, document['title']);
-                          },
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return Mydetails(
-                                  color: colores[index % colores.length],
-                                  mitexto: document['details'],
-                                  docID: document.id,
-                                );
-                              }));
-                            },
-                            child: Container(
-                                padding: EdgeInsets.all(10.0),
-                                decoration: BoxDecoration(
-                                    color: colores[index % colores.length],
-                                    borderRadius: BorderRadius.circular(20)),
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      document['title'],
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15,
-                                        color: bandera == 0
-                                            ? Colors.white
-                                            : Colors.black,
-                                      ),
-                                    ),
-                                    Text(
-                                      DateFormat('dd/MM/yyyy HH:mm').format(
-                                        (document['timestamp'] as Timestamp)
-                                            .toDate(),
-                                      ),
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                          color: Colors.white, fontSize: 10),
-                                    )
-                                  ],
-                                )),
+                padding: const EdgeInsets.all(10),
+                child: StaggeredGridView.countBuilder(
+                  crossAxisCount: 2,
+                  itemCount: noteList.length,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  itemBuilder: (context, index) {
+                    DocumentSnapshot document = noteList[index];
+                    return InkWell(
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return Mydetails(
+                            color: colores[index % colores.length],
+                            mitexto: document['details'],
+                            docID: document.id,
+                          );
+                        }));
+                      },
+                      onLongPress: () => deleteNote(document.id),
+                      onDoubleTap: () =>
+                          openNote(document.id, document['title']),
+                      child: Hero(
+                        tag: document.id,
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          elevation: 2,
+                          color: colores[index % colores.length],
+                          child: Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  document['title'],
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                SizedBox(height: 1),
+                                Text(
+                                  document['details'],
+                                  style: TextStyle(
+                                    //fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                                Text(
+                                  DateFormat('dd/MM/yyyy HH:mm').format(
+                                    (document['timestamp'] as Timestamp)
+                                        .toDate(),
+                                  ),
+                                  style: TextStyle(
+                                      fontSize: 12, color: Colors.black54),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      );
-                    }),
+                      ),
+                    );
+                  },
+                  staggeredTileBuilder: (index) => StaggeredTile.fit(1),
+                ),
               );
             } else {
               return CircularProgressIndicator();
@@ -173,7 +183,8 @@ class _HomePageState extends State<HomePage> {
           }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          openNote(null, null);
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => AddNotes()));
         },
         child: Icon(Icons.add),
       ),
