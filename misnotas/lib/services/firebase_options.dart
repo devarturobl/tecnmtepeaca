@@ -8,7 +8,7 @@ class FirestoreService {
   //Crear un registro
   Future<void> addNote(String note) {
     return notes
-        .add({'title': note, 'details': note, 'timestamp': Timestamp.now()});
+        .add({'title': note, 'details': '', 'timestamp': Timestamp.now()});
   }
 
   //Extraer o leer los datos de mi coleccion
@@ -22,6 +22,13 @@ class FirestoreService {
   Future<void> updateNotes(String docID, String title) {
     return notes.doc(docID).update({
       'title': title,
+      'timestamp': Timestamp.now(),
+    });
+  }
+
+  Future<void> updateDetails(String docID, String details) {
+    return notes.doc(docID).update({
+      'details': details,
       'timestamp': Timestamp.now(),
     });
   }

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:misnotas/pages/mydetails.dart';
 import 'package:misnotas/services/firebase_options.dart';
 
 class HomePage extends StatefulWidget {
@@ -120,36 +121,48 @@ class _HomePageState extends State<HomePage> {
                           onDoubleTap: () {
                             openNote(document.id, document['title']);
                           },
-                          child: Container(
-                              padding: EdgeInsets.all(10.0),
-                              decoration: BoxDecoration(
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return Mydetails(
                                   color: colores[index % colores.length],
-                                  borderRadius: BorderRadius.circular(20)),
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    document['title'],
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15,
-                                      color: bandera == 0
-                                          ? Colors.white
-                                          : Colors.black,
+                                  mitexto: document['details'],
+                                  docID: document.id,
+                                );
+                              }));
+                            },
+                            child: Container(
+                                padding: EdgeInsets.all(10.0),
+                                decoration: BoxDecoration(
+                                    color: colores[index % colores.length],
+                                    borderRadius: BorderRadius.circular(20)),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      document['title'],
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15,
+                                        color: bandera == 0
+                                            ? Colors.white
+                                            : Colors.black,
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    DateFormat('dd/MM/yyyy HH:mm').format(
-                                      (document['timestamp'] as Timestamp)
-                                          .toDate(),
-                                    ),
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                        color: Colors.white, fontSize: 10),
-                                  )
-                                ],
-                              )),
+                                    Text(
+                                      DateFormat('dd/MM/yyyy HH:mm').format(
+                                        (document['timestamp'] as Timestamp)
+                                            .toDate(),
+                                      ),
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                          color: Colors.white, fontSize: 10),
+                                    )
+                                  ],
+                                )),
+                          ),
                         ),
                       );
                     }),
