@@ -16,19 +16,40 @@ class _HomePageState extends State<HomePage> {
   //Declaro un textcontroller esto es un espacio de memoria que requieren los widgets TextField
   final TextEditingController textController = TextEditingController();
 
+  int bandera = 0;
+  void cambioBandera() {
+    if (bandera == 0) {
+      setState(() {
+        bandera = 1;
+      });
+    } else {
+      setState(() {
+        bandera = 0;
+      });
+    }
+  }
+
   //Funcion para llamar a el formulario de registro de nota
-  void openNote() {
+  void openNote(String? docID, String? title) {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
-              title: Text('Nueva Nota'),
+              title: Text('Nota'),
               content: TextField(
                 controller: textController,
+                decoration: InputDecoration(
+                  labelText: title,
+                  border: OutlineInputBorder(),
+                ),
               ),
               actions: [
                 ElevatedButton.icon(
                   onPressed: () {
-                    firestoreService.addNote(textController.text);
+                    if (docID != null) {
+                      firestoreService.updateNotes(docID, textController.text);
+                    } else {
+                      firestoreService.addNote(textController.text);
+                    }
                     textController.clear();
                     Navigator.pop(context);
                   },
@@ -95,31 +116,41 @@ class _HomePageState extends State<HomePage> {
                         onLongPress: () {
                           deleteNote();
                         },
-                        child: Container(
-                            padding: EdgeInsets.all(10.0),
-                            decoration: BoxDecoration(
-                                color: colores[index % colores.length],
-                                borderRadius: BorderRadius.circular(20)),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  document['title'],
-                                  style: TextStyle(
+                        child: GestureDetector(
+                          onDoubleTap: () {
+                            openNote(document.id, document['title']);
+                          },
+                          child: Container(
+                              padding: EdgeInsets.all(10.0),
+                              decoration: BoxDecoration(
+                                  color: colores[index % colores.length],
+                                  borderRadius: BorderRadius.circular(20)),
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    document['title'],
+                                    style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 20),
-                                ),
-                                Text(
-                                  DateFormat('dd/MM/yyyy HH:mm').format(
-                                    (document['timestamp'] as Timestamp)
-                                        .toDate(),
+                                      fontSize: 15,
+                                      color: bandera == 0
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
                                   ),
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                      color: Colors.white, fontSize: 15),
-                                )
-                              ],
-                            )),
+                                  Text(
+                                    DateFormat('dd/MM/yyyy HH:mm').format(
+                                      (document['timestamp'] as Timestamp)
+                                          .toDate(),
+                                    ),
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                        color: Colors.white, fontSize: 10),
+                                  )
+                                ],
+                              )),
+                        ),
                       );
                     }),
               );
@@ -129,7 +160,7 @@ class _HomePageState extends State<HomePage> {
           }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          openNote();
+          openNote(null, null);
         },
         child: Icon(Icons.add),
       ),
